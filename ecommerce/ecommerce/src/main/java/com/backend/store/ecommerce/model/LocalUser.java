@@ -30,6 +30,29 @@ public class LocalUser {
     // и ги трие АКО нещото тагнато с @OneToMany е изтрито, обаче ако е изтрито нещо с тагнато @ManyToMany трие само връзката, а децата си остават. В случая един user ако се изтрие се изтриват и адресите които е сложил
     private List<Adress> adresses = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("id desc")//descending за да пълни по реда в който се инкрементира
+    private List<VerificationToken> verificationTokens = new ArrayList<>();
+
+    @Column(name = "email_verified", nullable = false)
+    private Boolean emailVerified = false;
+
+    public boolean isEmailVerified() {
+        return emailVerified;
+    }
+
+    public void setEmailVerified(boolean emailVerified) {
+        this.emailVerified = emailVerified;
+    }
+
+    public List<VerificationToken> getVerificationTokens() {
+        return verificationTokens;
+    }
+
+    public void setVerificationTokens(List<VerificationToken> verificationTokens) {
+        this.verificationTokens = verificationTokens;
+    }
+
     public List<Adress> getAdresses() {
         return adresses;
     }
