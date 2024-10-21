@@ -15,7 +15,6 @@ public class VerificationToken {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Lob//large object- като правим string колоната в датабазата му дава максимум размер
     @Column(name = "token",columnDefinition ="text", nullable = false,unique = true)
     private String token;
 

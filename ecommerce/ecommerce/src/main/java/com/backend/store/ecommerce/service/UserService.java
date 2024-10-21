@@ -70,8 +70,8 @@ public class UserService {
                 }
                 else { //ако имейла не е потвърден взима листа с токените на usera и проверя дали някога е получавал токен или дали е получавал преди по-малко от час и ако тези двете кондиции са верни изпраща токен на usera
                     List<VerificationToken> verificationTokens = user.getVerificationTokens();
-                    boolean resend = verificationTokens.size() == 0 || verificationTokens.get(0).getCreatedTimestamp()
-                            .before(new Timestamp(System.currentTimeMillis() -(60*60*1000)));//означава ако няма токени изпратени или последния изпратен е бил преди timestampa да изпрати нов
+                    boolean resend = verificationTokens.isEmpty() || verificationTokens.get(0).getCreatedTimestamp()
+                            .before(new Timestamp(System.currentTimeMillis() - (60*1000)));//означава ако няма токени изпратени или последния изпратен е бил преди timestampa да изпрати нов
                     if(resend){
                         VerificationToken verificationToken = createVerificationToken(user);
                         verificationTokenRepository.save(verificationToken);

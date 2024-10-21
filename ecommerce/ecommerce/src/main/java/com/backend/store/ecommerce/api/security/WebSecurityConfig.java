@@ -24,7 +24,8 @@ public class WebSecurityConfig {
         http.addFilterBefore(jwtRequestFilter, AuthorizationFilter.class);//преди да се добави това първо извършваше тази проверка(auth -> auth.anyRequest().authenticated()) преди проверката за authentication в JWTReqeustFilter
         http.authorizeHttpRequests(auth -> auth.requestMatchers("/product").permitAll() //позволяваме за /product да се гледа без aauthentication, понеже продуктите могат да се гледат без регистрация например
                 .requestMatchers("/auth/register").permitAll()
-                .requestMatchers("/auth/login","/auth/verify").permitAll()
+                .requestMatchers("/auth/login").permitAll()
+                .requestMatchers("/auth/verify").permitAll()
                 .anyRequest().authenticated());
         return http.build();
     }
