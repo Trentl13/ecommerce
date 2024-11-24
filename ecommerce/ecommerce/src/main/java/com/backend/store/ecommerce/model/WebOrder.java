@@ -19,7 +19,7 @@ public class WebOrder {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "address_id",nullable = false)
-    private Adress adress;
+    private Address address;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.REMOVE,orphanRemoval = true)
     private List<WebOrderQuantities> quantities = new ArrayList<>();
@@ -32,12 +32,12 @@ public class WebOrder {
         this.quantities = quantities;
     }
 
-    public Adress getAdress() {
-        return adress;
+    public Address getAdress() {
+        return address;
     }
 
-    public void setAdress(Adress adress) {
-        this.adress = adress;
+    public void setAdress(Address address) {
+        this.address = address;
     }
 
     public LocalUser getUser() {

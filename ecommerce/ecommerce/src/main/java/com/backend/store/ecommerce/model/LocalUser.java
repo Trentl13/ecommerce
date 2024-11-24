@@ -28,12 +28,14 @@ public class LocalUser {
     @JsonIgnore
     @OneToMany(mappedBy = "user",cascade = CascadeType.REMOVE, orphanRemoval = true)//cascade = CascadeType.REMOVE открива всички деца на родител
     // и ги трие АКО нещото тагнато с @OneToMany е изтрито, обаче ако е изтрито нещо с тагнато @ManyToMany трие само връзката, а децата си остават. В случая един user ако се изтрие се изтриват и адресите които е сложил
-    private List<Adress> adresses = new ArrayList<>();
+    private List<Address> addresses = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("id desc")//descending за да пълни по реда в който се инкрементира
     private List<VerificationToken> verificationTokens = new ArrayList<>();
-
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("id desc")//descending за да пълни по реда в който се инкрементира
+    private List<PasswordResetToken> passwordResetTokens = new ArrayList<>();
     @Column(name = "email_verified", nullable = false)
     private Boolean emailVerified = false;
 
@@ -52,13 +54,20 @@ public class LocalUser {
     public void setVerificationTokens(List<VerificationToken> verificationTokens) {
         this.verificationTokens = verificationTokens;
     }
-
-    public List<Adress> getAdresses() {
-        return adresses;
+    public List<PasswordResetToken> getPasswordResetTokens() {
+        return passwordResetTokens;
     }
 
-    public void setAdresses(List<Adress> adresses) {
-        this.adresses = adresses;
+    public void setPasswordResetTokens(List<PasswordResetToken> passwordResetTokens) {
+        this.passwordResetTokens = passwordResetTokens;
+    }
+
+    public List<Address> getAdresses() {
+        return addresses;
+    }
+
+    public void setAdresses(List<Address> addresses) {
+        this.addresses = addresses;
     }
 
     public String getLastName() {

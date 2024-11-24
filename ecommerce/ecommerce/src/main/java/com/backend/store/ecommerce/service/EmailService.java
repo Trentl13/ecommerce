@@ -1,6 +1,7 @@
 package com.backend.store.ecommerce.service;
 
 import com.backend.store.ecommerce.exception.EmailFailureException;
+import com.backend.store.ecommerce.model.PasswordResetToken;
 import com.backend.store.ecommerce.model.VerificationToken;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
@@ -32,10 +33,26 @@ public class EmailService {
         message.setTo(verificationToken.getUser().getEmail());
         message.setSubject("Verify your email to activate your account.");
         message.setText("Please folow the link below to verify your email for account activation.\n" + url + "/auth/verify?token=" + verificationToken.getToken());
-        try{
+        trySendEMessage(message);
+    }
+    public void sendPasswordResetEmail(PasswordResetToken token) throws EmailFailureException{
+        SimpleMailMessage message = makeMailMessage();
+        message.setTo(token.getUser().getEmail());
+        message.setSubject("Reset your password");
+        message.setText("Please follow the link below to reset the password for your account.\n"
+                +url
+                +"/auth/resetpassword?token="
+                +token.getToken());
+        trySendEMessage(message);
+    }
+    public void trySendEMessage(SimpleMailMessage message) throws EmailFailureException{
+        try
+        {
             javaMailSender.send(message);
-        }catch(MailException ex){
-            throw new EmailFailureException();
+        }
+        catch(MailException ex)
+        {
+            throw new EmailFailureException(ex.getMessage());
         }
     }
 }

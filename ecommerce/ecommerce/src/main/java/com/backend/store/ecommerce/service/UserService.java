@@ -1,13 +1,14 @@
 package com.backend.store.ecommerce.service;
 
-import com.backend.store.ecommerce.api.model.LoginBody;
-import com.backend.store.ecommerce.api.model.RegistrationBody;
-import com.backend.store.ecommerce.exception.EmailFailureException;
-import com.backend.store.ecommerce.exception.UserAlreadyExistsException;
-import com.backend.store.ecommerce.exception.UserNotVerifiedException;
+import com.backend.store.ecommerce.api.model.*;
+import com.backend.store.ecommerce.exception.*;
+import com.backend.store.ecommerce.model.Address;
 import com.backend.store.ecommerce.model.LocalUser;
+import com.backend.store.ecommerce.model.PasswordResetToken;
 import com.backend.store.ecommerce.model.VerificationToken;
+import com.backend.store.ecommerce.model.repository.AddressRepository;
 import com.backend.store.ecommerce.model.repository.LocalUserRepository;
+import com.backend.store.ecommerce.model.repository.PasswordResetTokenRepository;
 import com.backend.store.ecommerce.model.repository.VerificationTokenRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -24,13 +25,23 @@ public class UserService {
     private EncryptionService encryptionService;
     private JWTService jwtService;
     private EmailService emailService;
+    private PasswordResetTokenRepository passwordResetTokenRepository;
+    private AddressRepository addressRepository;
 
-    public UserService(LocalUserRepository localUserRepository, VerificationTokenRepository verificationTokenRepository, EncryptionService encryptionService, JWTService jwtService, EmailService emailService){
+    public UserService(LocalUserRepository localUserRepository,
+                       VerificationTokenRepository verificationTokenRepository,
+                       EncryptionService encryptionService,
+                       JWTService jwtService,
+                       EmailService emailService,
+                       AddressRepository addressRepository,
+                       PasswordResetTokenRepository passwordResetTokenRepository){
         this.localUserRepository = localUserRepository;
         this.verificationTokenRepository = verificationTokenRepository;
         this.encryptionService = encryptionService;
         this.jwtService = jwtService;
         this.emailService = emailService;
+        this.addressRepository = addressRepository;
+        this.passwordResetTokenRepository = passwordResetTokenRepository;
     }
 
     public LocalUser registerUser(RegistrationBody registrationBody) throws UserAlreadyExistsException, EmailFailureException {
@@ -58,6 +69,14 @@ public class UserService {
         verificationToken.setUser(user);
         user.getVerificationTokens().add(verificationToken);
         return verificationToken;
+    }
+    private PasswordResetToken createPasswordResetToken(LocalUser user){
+        PasswordResetToken passwordResetToken = new PasswordResetToken();
+        passwordResetToken.setToken(jwtService.generateVerificationJWT(user));
+        passwordResetToken.setCreatedTimestamp(new Timestamp(System.currentTimeMillis()));
+        passwordResetToken.setUser(user);
+        user.getPasswordResetTokens().add(passwordResetToken);
+        return passwordResetToken;
     }
 
     public String logInUser(LoginBody loginBody) throws UserNotVerifiedException, EmailFailureException {
@@ -99,5 +118,78 @@ public class UserService {
         }
         return false;
     }
+    public void passwordResetEmail(EmailBody emailBody) throws EmailFailureException {
+        Optional<LocalUser> opUser = localUserRepository.findByEmailIgnoreCase(emailBody.email);
+
+        if (opUser.isEmpty()) {
+            throw new EmailFailureException("No such user exists with given email");
+        }
+
+        LocalUser user = opUser.get();
+        PasswordResetToken prToken = createPasswordResetToken(user);
+        passwordResetTokenRepository.save(prToken);
+        emailService.sendPasswordResetEmail(prToken);
+    }
+    public void changePassword(String token, PasswordChangeBody body)
+            throws PasswordFailureException, MissingTokenException {
+        Optional<PasswordResetToken> opToken = passwordResetTokenRepository.findByToken(token);
+
+        if (opToken.isEmpty()) {
+            throw new MissingTokenException("Token is not valid");
+        }
+
+        LocalUser user = opToken.get().getUser();
+
+        if (!body.getNewPassword1().equals(body.getNewPassword2())) {
+            throw new PasswordFailureException("The given passwords don't match");
+        }
+
+        if (body.getNewPassword1().equals(user.getPassword())) {
+            throw new PasswordFailureException("The new password is equal to the current one");
+        }
+
+        String encryptedPassword = encryptionService.encryptPassword(body.getNewPassword1());
+        user.setPassword(encryptedPassword);
+        localUserRepository.save(user);
+        passwordResetTokenRepository.deleteByUser(user);
+    }
+    public void updateAddress(AddressBody body) throws AddressFailureExeption
+    {
+        LocalUser user = body.getUser();
+        Address foundAddress = new Address();
+        for (Address address : user.getAdresses()) {
+            if (address.getId() == body.getId()) {
+                foundAddress = address;
+                break;
+            }
+        }
+        foundAddress.setAdressLine1(body.getAdressLine1());
+        foundAddress.setAdressLine2(body.getAdressLine1());
+        foundAddress.setCity(body.getCity());
+        foundAddress.setCountry(body.getCountry());
+        addressRepository.save(foundAddress);
+    }
+    public void insertAddress(AddressBody body) throws AddressFailureExeption
+    {
+        LocalUser user = body.getUser();
+        for (Address address : user.getAdresses()) {
+            if (address.getCity().equals(body.getCity()) &&
+                    address.getCountry().equals(body.getCountry()) &&
+                    address.getAdressLine1().equals(body.getAdressLine1()) &&
+                    address.getAdressLine2().equals(body.getAdressLine2())
+            ) {
+                throw new AddressFailureExeption("You already have an existing address that is equal to the given one");
+            }
+
+        }
+        Address address = new Address();
+        address.setAdressLine1(body.getAdressLine1());
+        address.setAdressLine2(body.getAdressLine1());
+        address.setCity(body.getCity());
+        address.setCountry(body.getCountry());
+        address.setUser(body.getUser());
+        addressRepository.save(address);
+    }
+
 
 }

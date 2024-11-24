@@ -1,13 +1,13 @@
 package com.backend.store.ecommerce.api.controller.auth;
 
-import com.backend.store.ecommerce.api.model.LoginBody;
-import com.backend.store.ecommerce.api.model.LoginResponse;
-import com.backend.store.ecommerce.api.model.RegistrationBody;
+import com.backend.store.ecommerce.api.model.*;
 import com.backend.store.ecommerce.exception.EmailFailureException;
+import com.backend.store.ecommerce.exception.PasswordFailureException;
 import com.backend.store.ecommerce.exception.UserAlreadyExistsException;
 import com.backend.store.ecommerce.exception.UserNotVerifiedException;
 import com.backend.store.ecommerce.model.LocalUser;
 import com.backend.store.ecommerce.service.UserService;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -76,6 +76,28 @@ public class AuthenticationController {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
 
+    }
+
+    @PostMapping("/resetpassword")
+    @Transactional
+    public ResponseEntity resetPassword(@Valid @RequestBody PasswordChangeBody body , @RequestParam String token){
+        try{
+            userService.changePassword(token,body);
+        }
+        catch(PasswordFailureException e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+        return ResponseEntity.ok().build();
+    }
+    @PostMapping("/resetpasswordemail")
+    public ResponseEntity resetPasswordEmail(@Valid @RequestBody EmailBody emailBody){
+        try{
+            userService.passwordResetEmail(emailBody);
+        }
+        catch(EmailFailureException e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/me")
