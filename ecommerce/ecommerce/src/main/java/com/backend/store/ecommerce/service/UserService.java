@@ -153,41 +153,25 @@ public class UserService {
         localUserRepository.save(user);
         passwordResetTokenRepository.deleteByUser(user);
     }
-    public void updateAddress(AddressBody body) throws AddressFailureExeption {
-        Address foundAddress = body.getUser().getAdresses().stream()
-                .filter(address -> address.getId() == body.getId())
-                .findFirst()
-                .orElseThrow(() -> new AddressFailureExeption("Address not found"));
-
-        foundAddress.setAdressLine1(body.getAdressLine1());
-        foundAddress.setAdressLine2(body.getAdressLine2());
-        foundAddress.setCity(body.getCity());
-        foundAddress.setCountry(body.getCountry());
-
-        addressRepository.save(foundAddress);
-    }
     public void insertAddress(AddressBody body) throws AddressFailureExeption {
+        //Address addressToAdd = new Address(body.getAdressLine1(), body.getAdressLine2(), body.getCity(), body.getCountry())
+        //да питам Боби как трябва да се извече user-a
+
+    }
+    public void updateAddress(AddressBody body) throws AddressFailureExeption {
         LocalUser user = body.getUser();
 
-        boolean addressExists = user.getAdresses().stream().anyMatch(address ->
-                address.getCity().equals(body.getCity()) &&
-                        address.getCountry().equals(body.getCountry()) &&
-                        address.getAdressLine1().equals(body.getAdressLine1()) &&
-                        address.getAdressLine2().equals(body.getAdressLine2())
-        );
+        Address matchingAddress = user.getAdresses().stream()
+                .filter(address ->
+                        address.getId().equals(body.getId())
+                )
+                .findFirst().orElseThrow(() -> new AddressFailureExeption("Address not found for the given details."));;
 
-        if (addressExists) {
-            throw new AddressFailureExeption("You already have an existing address that is equal to the given one");
-        }
-
-        Address address = new Address();
-        address.setAdressLine1(body.getAdressLine1());
-        address.setAdressLine2(body.getAdressLine2());
-        address.setCity(body.getCity());
-        address.setCountry(body.getCountry());
-        address.setUser(user);
-
-        addressRepository.save(address);
+        matchingAddress.setAdressLine1(body.getAdressLine1());
+        matchingAddress.setAdressLine2(body.getAdressLine2());
+        matchingAddress.setCity(body.getCity());
+        matchingAddress.setCountry(body.getCountry());
+        addressRepository.save(matchingAddress);
     }
 
 

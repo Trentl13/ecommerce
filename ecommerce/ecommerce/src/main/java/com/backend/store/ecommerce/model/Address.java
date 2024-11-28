@@ -24,6 +24,26 @@ public class Address {
     @JoinColumn(name = "user_id",nullable = false)
     private LocalUser user;
 
+    public Address(Long id, String adressLine1, String adressLine2, String city, String country, LocalUser user) {
+        this.id = id;
+        this.adressLine1 = adressLine1;
+        this.adressLine2 = adressLine2;
+        this.city = city;
+        this.country = country;
+        this.user = user;
+    }
+
+    public Address() {
+    }
+
+    public Address(String adressLine1, String adressLine2, String city, String country, LocalUser user) {
+        this.adressLine1 = adressLine1;
+        this.adressLine2 = adressLine2;
+        this.city = city;
+        this.country = country;
+        this.user = user;
+    }
+
     public LocalUser getUser() {
         return user;
     }
@@ -71,4 +91,5 @@ public class Address {
     public void setId(Long id) {
         this.id = id;
     }
+
 }
