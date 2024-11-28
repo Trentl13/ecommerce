@@ -153,41 +153,40 @@ public class UserService {
         localUserRepository.save(user);
         passwordResetTokenRepository.deleteByUser(user);
     }
-    public void updateAddress(AddressBody body) throws AddressFailureExeption
-    {
-        LocalUser user = body.getUser();
-        Address foundAddress = new Address();
-        for (Address address : user.getAdresses()) {
-            if (address.getId() == body.getId()) {
-                foundAddress = address;
-                break;
-            }
-        }
+    public void updateAddress(AddressBody body) throws AddressFailureExeption {
+        Address foundAddress = body.getUser().getAdresses().stream()
+                .filter(address -> address.getId() == body.getId())
+                .findFirst()
+                .orElseThrow(() -> new AddressFailureExeption("Address not found"));
+
         foundAddress.setAdressLine1(body.getAdressLine1());
-        foundAddress.setAdressLine2(body.getAdressLine1());
+        foundAddress.setAdressLine2(body.getAdressLine2());
         foundAddress.setCity(body.getCity());
         foundAddress.setCountry(body.getCountry());
+
         addressRepository.save(foundAddress);
     }
-    public void insertAddress(AddressBody body) throws AddressFailureExeption
-    {
+    public void insertAddress(AddressBody body) throws AddressFailureExeption {
         LocalUser user = body.getUser();
-        for (Address address : user.getAdresses()) {
-            if (address.getCity().equals(body.getCity()) &&
-                    address.getCountry().equals(body.getCountry()) &&
-                    address.getAdressLine1().equals(body.getAdressLine1()) &&
-                    address.getAdressLine2().equals(body.getAdressLine2())
-            ) {
-                throw new AddressFailureExeption("You already have an existing address that is equal to the given one");
-            }
 
+        boolean addressExists = user.getAdresses().stream().anyMatch(address ->
+                address.getCity().equals(body.getCity()) &&
+                        address.getCountry().equals(body.getCountry()) &&
+                        address.getAdressLine1().equals(body.getAdressLine1()) &&
+                        address.getAdressLine2().equals(body.getAdressLine2())
+        );
+
+        if (addressExists) {
+            throw new AddressFailureExeption("You already have an existing address that is equal to the given one");
         }
+
         Address address = new Address();
         address.setAdressLine1(body.getAdressLine1());
-        address.setAdressLine2(body.getAdressLine1());
+        address.setAdressLine2(body.getAdressLine2());
         address.setCity(body.getCity());
         address.setCountry(body.getCountry());
-        address.setUser(body.getUser());
+        address.setUser(user);
+
         addressRepository.save(address);
     }
 
