@@ -1,10 +1,7 @@
 package com.backend.store.ecommerce.api.controller.auth;
 
 import com.backend.store.ecommerce.api.model.*;
-import com.backend.store.ecommerce.exception.EmailFailureException;
-import com.backend.store.ecommerce.exception.PasswordFailureException;
-import com.backend.store.ecommerce.exception.UserAlreadyExistsException;
-import com.backend.store.ecommerce.exception.UserNotVerifiedException;
+import com.backend.store.ecommerce.exception.*;
 import com.backend.store.ecommerce.model.LocalUser;
 import com.backend.store.ecommerce.service.UserService;
 import jakarta.transaction.Transactional;
@@ -104,5 +101,27 @@ public class AuthenticationController {
     public LocalUser getLoggedInUserProfile(@AuthenticationPrincipal LocalUser user){
         return user;
 
+    }
+    @PostMapping("/insertaddress")
+    public ResponseEntity insertAddress(@Valid @RequestBody AddressBody body)
+    {
+        try{
+            userService.insertAddress(body);
+        }
+        catch(AddressFailureExeption e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+        return ResponseEntity.ok().build();
+    }
+    @PostMapping("/updateaddress")
+    public ResponseEntity updateAddress(@Valid @RequestBody AddressUpdateBody body)
+    {
+        try{
+            userService.updateAddress(body);
+        }
+        catch(AddressFailureExeption e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+        return ResponseEntity.ok().build();
     }
 }

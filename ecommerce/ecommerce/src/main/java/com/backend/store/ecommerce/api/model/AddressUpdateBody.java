@@ -1,19 +1,17 @@
 package com.backend.store.ecommerce.api.model;
 
-import com.backend.store.ecommerce.model.LocalUser;
 
-public class AddressBody {
+public class AddressUpdateBody {
 
-    private Long userId;
+    private Long id;
     private String adressLine1;
     private String adressLine2;
     private String city;
     private String country;
-    private LocalUser user;
 
-    public Long getUserId() {
+    public Long getId() {
 
-        return userId;
+        return id;
     }
     public String getAdressLine1() {
         return adressLine1;
@@ -47,11 +45,9 @@ public class AddressBody {
         this.country = country;
     }
 
-    public LocalUser getUser() {
-        return user;
-    }
 
 
 
 
 }
+

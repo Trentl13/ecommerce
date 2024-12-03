@@ -28,6 +28,8 @@ public class WebSecurityConfig {
                 .requestMatchers("/auth/verify").permitAll()
                 .requestMatchers("/auth/resetpasswordemail").permitAll()
                 .requestMatchers("/auth/resetpassword").permitAll()
+                .requestMatchers("/auth/updateaddress").permitAll()
+                .requestMatchers("/auth/insertaddress").permitAll()
                 .anyRequest().authenticated());
         return http.build();
     }

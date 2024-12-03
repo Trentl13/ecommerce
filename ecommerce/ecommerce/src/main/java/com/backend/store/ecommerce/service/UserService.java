@@ -154,24 +154,22 @@ public class UserService {
         passwordResetTokenRepository.deleteByUser(user);
     }
     public void insertAddress(AddressBody body) throws AddressFailureExeption {
-        //Address addressToAdd = new Address(body.getAdressLine1(), body.getAdressLine2(), body.getCity(), body.getCountry())
-        //да питам Боби как трябва да се извече user-a
 
+        Address addressToAdd = new Address(body.getAdressLine1(), body.getAdressLine2(), body.getCity(), body.getCountry());
+        LocalUser user = localUserRepository.findById(body.getUserId())
+                .orElseThrow(() -> new AddressFailureExeption("User not found"));
+        addressToAdd.setUser(user);
+        addressRepository.save(addressToAdd);
     }
-    public void updateAddress(AddressBody body) throws AddressFailureExeption {
-        LocalUser user = body.getUser();
+    public void updateAddress(AddressUpdateBody body) throws AddressFailureExeption {
+       Address address = addressRepository.findById(body.getId())
+                .orElseThrow(() -> new AddressFailureExeption("Address not found"));
+        address.setAdressLine1(body.getAdressLine1());
+        address.setAdressLine2(body.getAdressLine2());
+        address.setCity(body.getCity());
+        address.setCountry(body.getCountry());
 
-        Address matchingAddress = user.getAdresses().stream()
-                .filter(address ->
-                        address.getId().equals(body.getId())
-                )
-                .findFirst().orElseThrow(() -> new AddressFailureExeption("Address not found for the given details."));;
-
-        matchingAddress.setAdressLine1(body.getAdressLine1());
-        matchingAddress.setAdressLine2(body.getAdressLine2());
-        matchingAddress.setCity(body.getCity());
-        matchingAddress.setCountry(body.getCountry());
-        addressRepository.save(matchingAddress);
+        addressRepository.save(address);
     }
 
 
