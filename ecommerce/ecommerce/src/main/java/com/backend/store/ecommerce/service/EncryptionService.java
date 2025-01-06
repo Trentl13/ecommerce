@@ -6,7 +6,7 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
 @Service
-public class EncryptionService {
+public class EncryptionService implements com.backend.store.ecommerce.service.contracts.IEncryptionService {
     @Value("${encryption.salt.rounds}") //This annotation is used to inject a configuration value (encryption.salt.rounds) from an external property file
     private int saltRounds; //saltRounds is an integer representing the "cost" factor (or the number of hashing rounds) for generating the salt.
     private String salt; //This is a private instance variable that will hold the generated salt string after it’s created by the BCrypt algorithm.

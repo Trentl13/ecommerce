@@ -3,6 +3,8 @@ package com.backend.store.ecommerce.service;
 import com.backend.store.ecommerce.exception.EmailFailureException;
 import com.backend.store.ecommerce.model.PasswordResetToken;
 import com.backend.store.ecommerce.model.VerificationToken;
+import com.backend.store.ecommerce.service.contracts.IEmailService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
@@ -10,7 +12,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 @Service
-public class EmailService {
+public class EmailService implements IEmailService {
     @Value("${email.from}")
     private String fromAddress;
 
@@ -19,6 +21,7 @@ public class EmailService {
 
     private JavaMailSender javaMailSender;
 
+    @Autowired
     public EmailService(JavaMailSender javaMailSender) {
         this.javaMailSender = javaMailSender;
     }

@@ -10,6 +10,7 @@ import com.backend.store.ecommerce.model.repository.AddressRepository;
 import com.backend.store.ecommerce.model.repository.LocalUserRepository;
 import com.backend.store.ecommerce.model.repository.PasswordResetTokenRepository;
 import com.backend.store.ecommerce.model.repository.VerificationTokenRepository;
+import com.backend.store.ecommerce.service.contracts.IUserService;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserService {
+public class UserService implements IUserService {
 
     private LocalUserRepository localUserRepository;
     private VerificationTokenRepository verificationTokenRepository;
@@ -57,7 +58,6 @@ public class UserService {
         user.setPassword(encryptionService.encryptPassword(registrationBody.getPassword()));
         VerificationToken verificationToken = createVerificationToken(user);
         emailService.sendVerificationEmail(verificationToken);
-        //verificationTokenRepository.save(verificationToken); не ни трябва заради CascadeType.ALL в LocalUser//токена се запазва заедно със запазването на LocalUser
 
         return localUserRepository.save(user);
     }
@@ -82,12 +82,12 @@ public class UserService {
     public String logInUser(LoginBody loginBody) throws UserNotVerifiedException, EmailFailureException {
         Optional<LocalUser> opUser = localUserRepository.findByUsernameIgnoreCase(loginBody.getUsername());
         if(opUser.isPresent()){
-            LocalUser user = opUser.get(); //checks if the user exists
+            LocalUser user = opUser.get();
             if(encryptionService.verifyPassword(loginBody.getPassword(), user.getPassword())){ //verifies password
                 if(user.isEmailVerified()) { //verifies email
                     return jwtService.generateJWT(user);
                 }
-                else { //ако имейла не е потвърден взима листа с токените на usera и проверя дали някога е получавал токен или дали е получавал преди по-малко от час и ако тези двете кондиции са верни изпраща токен на usera
+                else {
                     List<VerificationToken> verificationTokens = user.getVerificationTokens();
                     boolean resend = verificationTokens.isEmpty() || verificationTokens.get(0).getCreatedTimestamp()
                             .before(new Timestamp(System.currentTimeMillis() - (60*1000)));//означава ако няма токени изпратени или последния изпратен е бил преди timestampa да изпрати нов
@@ -108,7 +108,7 @@ public class UserService {
         Optional<VerificationToken> opToken = verificationTokenRepository.findByToken(token);//търсим дали сме изпратили ние токена
         if(opToken.isPresent()){
             VerificationToken verificationToken = opToken.get();
-            LocalUser user = verificationToken.getUser();//взимаме usera от токена и проверяваме дали е verified или не, ако не е го запазваме и verify-ваме и после трием токените свързани с него понеже не ни трябват
+            LocalUser user = verificationToken.getUser();
             if(!user.isEmailVerified()){
                 user.setEmailVerified(true);
                 localUserRepository.save(user);
