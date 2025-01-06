@@ -1,12 +1,13 @@
 package com.backend.store.ecommerce.api.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.*;
+import lombok.Data;
 import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
 @Data
 public class ApiError {
     private HttpStatus status;
@@ -40,7 +41,7 @@ public class ApiError {
     }
 
     public void addSubError(ApiSubError subError) {
-        if(subErrors == null) {
+        if (subErrors == null) {
             subErrors = new ArrayList<>();
         }
         subErrors.add(subError);

@@ -1,7 +1,10 @@
 package com.backend.store.ecommerce.exception;
 
+import lombok.Getter;
+
 import java.util.List;
 
+@Getter
 public class AddressValidationException extends RuntimeException {
     private final List<String> errors;
 
@@ -10,7 +13,4 @@ public class AddressValidationException extends RuntimeException {
         this.errors = errors;
     }
 
-    public List<String> getErrors() {
-        return errors;
-    }
 }
