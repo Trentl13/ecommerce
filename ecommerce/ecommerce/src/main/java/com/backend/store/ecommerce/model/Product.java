@@ -1,71 +1,86 @@
 package com.backend.store.ecommerce.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
+
+@Data
 @Entity
 @Table(name = "product")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id",nullable = false)
+    @Column(name = "id", nullable = false)
     private Long id;
+
     @Column(name = "name", nullable = false, unique = true)
     private String name;
+
     @Column(name = "short_desc", nullable = false)
     private String shortDesc;
-    @Column(name = "long_desc")
-    private String longDesc;
-    @Column(name = "price", nullable = false)
-    private Double price;
 
-    @OneToOne(mappedBy = "product", cascade = CascadeType.REMOVE, optional = false, orphanRemoval = true)//при всички тагове с @NeshtoToMany ако се изтрият или ако детето вече не е refrenced се трие когато orphanRemoval = true
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "price", nullable = false)
+    private BigDecimal price;
+
+    @OneToOne(mappedBy = "product", cascade = CascadeType.REMOVE, optional = false, orphanRemoval = true)
     private Inventory inventory;
 
-    public Inventory getInventory() {
-        return inventory;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ProductImage> images = new HashSet<>();
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("createdAt DESC")
+    private Set<ProductReview> reviews = new HashSet<>();
+
+    @ManyToMany
+    @JoinTable(
+            name = "product_category",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
+    private Set<Category> categories = new HashSet<>();
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
     }
 
-    public void setInventory(Inventory inventory) {
-        this.inventory = inventory;
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
     }
 
-    public Double getPrice() {
-        return price;
+    public void addImage(ProductImage image) {
+        images.add(image);
+        image.setProduct(this);
     }
 
-    public void setPrice(Double price) {
-        this.price = price;
+    public void removeImage(ProductImage image) {
+        images.remove(image);
+        image.setProduct(null);
     }
 
-    public String getLongDesc() {
-        return longDesc;
+    public void addReview(ProductReview review) {
+        reviews.add(review);
+        review.setProduct(this);
     }
 
-    public void setLongDesc(String longDesc) {
-        this.longDesc = longDesc;
-    }
-
-    public String getShortDesc() {
-        return shortDesc;
-    }
-
-    public void setShortDesc(String shortDesc) {
-        this.shortDesc = shortDesc;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+    public void removeReview(ProductReview review) {
+        reviews.remove(review);
+        review.setProduct(null);
     }
 }

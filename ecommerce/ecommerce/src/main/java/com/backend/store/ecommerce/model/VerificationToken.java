@@ -1,11 +1,13 @@
 package com.backend.store.ecommerce.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.sql.Timestamp;
 
 //правим лист от токени, понеже искаме да проверяваме дали сме пратили имейл токен за верификация наскоро при user-a
 //и ако не сме да му пратим нов
+@Data
 @Entity
 @Table(name = "verification_token")
 public class VerificationToken {
@@ -15,7 +17,7 @@ public class VerificationToken {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "token",columnDefinition ="text", nullable = false,unique = true)
+    @Column(name = "token", columnDefinition = "text", nullable = false, unique = true)
     private String token;
 
     @Column(name = "created_timestamp", nullable = false)
@@ -25,35 +27,5 @@ public class VerificationToken {
     @JoinColumn(name = "user_id", nullable = false)
     private LocalUser user;
 
-    public LocalUser getUser() {
-        return user;
-    }
 
-    public void setUser(LocalUser user) {
-        this.user = user;
-    }
-
-    public Timestamp getCreatedTimestamp() {
-        return createdTimestamp;
-    }
-
-    public void setCreatedTimestamp(Timestamp createdTimestamp) {
-        this.createdTimestamp = createdTimestamp;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
 }
