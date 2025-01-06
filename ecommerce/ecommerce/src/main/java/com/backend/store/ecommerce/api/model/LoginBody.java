@@ -2,7 +2,9 @@ package com.backend.store.ecommerce.api.model;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Data;
 
+@Data
 public class LoginBody {
     @NotNull
     @NotBlank
@@ -11,7 +13,7 @@ public class LoginBody {
     @NotBlank
     private String password;
 
-    public String getUsername() {
+   /* public String getUsername() {
         return username;
     }
 
@@ -25,5 +27,5 @@ public class LoginBody {
 
     public void setPassword(String password) {
         this.password = password;
-    }
+    }*/
 }

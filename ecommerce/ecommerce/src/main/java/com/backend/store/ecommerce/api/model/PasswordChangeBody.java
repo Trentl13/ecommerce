@@ -4,7 +4,12 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
+@Data
 public class PasswordChangeBody {
 
     @NotNull
@@ -17,11 +22,5 @@ public class PasswordChangeBody {
     @Size(min = 3, max = 30)
     @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{6,}$") //Minimum eight characters, at least one letter and one number
     private String newPassword2;
-    public String getNewPassword1() {
-        return newPassword1;
-    }
-    public String getNewPassword2() {
-        return newPassword2;
-    }
 
 }

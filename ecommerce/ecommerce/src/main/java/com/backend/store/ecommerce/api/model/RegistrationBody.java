@@ -1,8 +1,13 @@
 package com.backend.store.ecommerce.api.model;
 
 import jakarta.validation.constraints.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
 //Validation dependency ot spring initializr
+@Data
 public class RegistrationBody {
     @NotNull
     @NotBlank
@@ -24,23 +29,4 @@ public class RegistrationBody {
     @NotBlank
     private String lastName;
 
-    public String getUsername() {
-        return username;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
 }
