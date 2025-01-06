@@ -1,7 +1,7 @@
 package com.backend.store.ecommerce.model;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

@@ -5,12 +5,12 @@ import com.backend.store.ecommerce.mapper.CategoryMapper;
 import com.backend.store.ecommerce.model.Category;
 import com.backend.store.ecommerce.model.repository.CategoryRepository;
 import com.backend.store.ecommerce.service.contracts.ICategoryService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 @Service
 public class CategoryService implements ICategoryService {
     @Autowired

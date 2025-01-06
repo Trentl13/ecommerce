@@ -6,5 +6,6 @@ import com.backend.store.ecommerce.model.VerificationToken;
 
 public interface IEmailService {
     void sendVerificationEmail(VerificationToken verificationToken) throws EmailFailureException;
+
     void sendPasswordResetEmail(PasswordResetToken token) throws EmailFailureException;
 }

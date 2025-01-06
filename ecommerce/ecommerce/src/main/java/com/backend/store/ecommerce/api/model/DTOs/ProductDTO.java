@@ -1,6 +1,7 @@
 package com.backend.store.ecommerce.api.model.DTOs;
 
 import lombok.Data;
+
 import java.math.BigDecimal;
 
 @Data

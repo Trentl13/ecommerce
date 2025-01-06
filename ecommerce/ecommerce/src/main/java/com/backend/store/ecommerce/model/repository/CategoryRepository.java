@@ -11,5 +11,6 @@ import java.util.Optional;
 public interface CategoryRepository extends ListCrudRepository<Category, Long>,
         PagingAndSortingRepository<Category, Long> {
     Optional<Category> findByNameIgnoreCase(String name);
+
     Page<Category> findByNameContainingIgnoreCase(String name, Pageable pageable);
 }

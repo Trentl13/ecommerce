@@ -49,6 +49,7 @@ public class ProductController {
         this.productReviewService = productReviewService;
         this.productImageService = productImageService;
     }
+
     @Operation(summary = "Get all products",
             description = "Retrieves a list of all available products")
     @ApiResponse(responseCode = "200", description = "Successfully retrieved products")
@@ -153,6 +154,7 @@ public class ProductController {
                 product, request.getImageUrl(), request.isPrimary());
         return ResponseEntity.ok(mapToImageDTO(image));
     }
+
     @Operation(summary = "Delete product image",
             description = "Deletes an image from a product")
     @ApiResponse(responseCode = "204", description = "Image successfully deleted")
@@ -165,6 +167,7 @@ public class ProductController {
         productImageService.deleteImage(imageId);
         return ResponseEntity.noContent().build();
     }
+
     @Operation(summary = "Set primary image",
             description = "Sets an image as the primary image for a product")
     @ApiResponse(responseCode = "200", description = "Primary image successfully set")

@@ -1,8 +1,7 @@
-
 package com.backend.store.ecommerce.model.repository;
 
-import com.backend.store.ecommerce.model.ShoppingCart;
 import com.backend.store.ecommerce.model.LocalUser;
+import com.backend.store.ecommerce.model.ShoppingCart;
 import org.springframework.data.repository.ListCrudRepository;
 
 import java.util.Optional;

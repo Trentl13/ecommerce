@@ -1,7 +1,7 @@
 package com.backend.store.ecommerce.model;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Data;
 
 import java.sql.Timestamp;
 
@@ -17,7 +17,7 @@ public class VerificationToken {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "token",columnDefinition ="text", nullable = false,unique = true)
+    @Column(name = "token", columnDefinition = "text", nullable = false, unique = true)
     private String token;
 
     @Column(name = "created_timestamp", nullable = false)

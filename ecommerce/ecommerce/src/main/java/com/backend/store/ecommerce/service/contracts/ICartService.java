@@ -1,7 +1,7 @@
 package com.backend.store.ecommerce.service.contracts;
 
-import com.backend.store.ecommerce.model.LocalUser;
 import com.backend.store.ecommerce.api.model.DTOs.CartItemDTO;
+import com.backend.store.ecommerce.model.LocalUser;
 import com.backend.store.ecommerce.model.ShoppingCart;
 
 import java.math.BigDecimal;

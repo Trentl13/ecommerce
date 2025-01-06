@@ -18,7 +18,7 @@ public class ProductImageService implements IProductImageService {
 
     @Autowired
     public ProductImageService(ProductImageRepository productImageRepository,
-                                   ProductRepository productRepository) {
+                               ProductRepository productRepository) {
         this.productImageRepository = productImageRepository;
         this.productRepository = productRepository;
     }
@@ -60,7 +60,7 @@ public class ProductImageService implements IProductImageService {
     @Override
     public void setPrimaryImage(Long imageId) {
         ProductImage newPrimary = productImageRepository.findById(imageId)
-                .orElseThrow(() -> new EntityNotFoundException("Image not founf"));
+                .orElseThrow(() -> new EntityNotFoundException("Image not found"));
 
         Product product = newPrimary.getProduct();
 

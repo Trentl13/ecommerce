@@ -1,7 +1,7 @@
 package com.backend.store.ecommerce.api.model;
 
 import com.backend.store.ecommerce.model.LocalUser;
-import lombok.*;
+import lombok.Data;
 
 @Data
 public class AddressBody {

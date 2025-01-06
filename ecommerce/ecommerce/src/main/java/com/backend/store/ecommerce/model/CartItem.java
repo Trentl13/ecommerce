@@ -1,8 +1,8 @@
 package com.backend.store.ecommerce.model;
 
 
-import lombok.Data;
 import jakarta.persistence.*;
+import lombok.Data;
 
 @Data
 @Entity

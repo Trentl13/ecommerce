@@ -71,7 +71,7 @@ public class ProductReviewService implements IProductReviewService {
     @Override
     public ProductReview getUserReview(Product product, LocalUser user) {
         return productReviewRepository.findByProductAndUser(product, user)
-                .orElseThrow(() -> new EntityNotFoundException("Review not founf"));
+                .orElseThrow(() -> new EntityNotFoundException("Review not found"));
     }
 
     private void validateRating(Integer rating) {

@@ -7,21 +7,22 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class EncryptionService implements com.backend.store.ecommerce.service.contracts.IEncryptionService {
-    @Value("${encryption.salt.rounds}") //This annotation is used to inject a configuration value (encryption.salt.rounds) from an external property file
+    @Value("${encryption.salt.rounds}")
+    //This annotation is used to inject a configuration value (encryption.salt.rounds) from an external property file
     private int saltRounds; //saltRounds is an integer representing the "cost" factor (or the number of hashing rounds) for generating the salt.
     private String salt; //This is a private instance variable that will hold the generated salt string after it’s created by the BCrypt algorithm.
 
     @PostConstruct //показва че метода трябва да се ползва след като bean-a е готов
-    public void saltConstruct(){
+    public void saltConstruct() {
         salt = BCrypt.gensalt(saltRounds);
     }
 
-    public String encryptPassword(String password){
-        return BCrypt.hashpw(password,salt);
+    public String encryptPassword(String password) {
+        return BCrypt.hashpw(password, salt);
     }
 
-    public boolean verifyPassword(String password, String hash){
-        return BCrypt.checkpw(password,hash);
+    public boolean verifyPassword(String password, String hash) {
+        return BCrypt.checkpw(password, hash);
     }
 }
 

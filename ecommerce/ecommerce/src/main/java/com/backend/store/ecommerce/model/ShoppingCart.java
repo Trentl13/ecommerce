@@ -1,7 +1,6 @@
 package com.backend.store.ecommerce.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.Entity;
 import jakarta.persistence.*;
 import lombok.Data;
 

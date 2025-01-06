@@ -9,5 +9,6 @@ import java.util.Optional;
 
 public interface ProductImageRepository extends ListCrudRepository<ProductImage, Long> {
     List<ProductImage> findByProduct(Product product);
+
     Optional<ProductImage> findByProductAndIsPrimaryTrue(Product product);
 }

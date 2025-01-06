@@ -1,8 +1,8 @@
 package com.backend.store.ecommerce.api.model.DTOs;
 
-import lombok.Data;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.Data;
 
 @Data
 public class CategoryDTO {

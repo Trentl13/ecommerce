@@ -1,8 +1,8 @@
 package com.backend.store.ecommerce.api.model.DTOs;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
 
 import java.math.BigDecimal;
 

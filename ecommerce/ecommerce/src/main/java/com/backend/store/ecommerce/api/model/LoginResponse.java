@@ -1,6 +1,6 @@
 package com.backend.store.ecommerce.api.model;
 
-import lombok.*;
+import lombok.Data;
 
 @Data
 public class LoginResponse {

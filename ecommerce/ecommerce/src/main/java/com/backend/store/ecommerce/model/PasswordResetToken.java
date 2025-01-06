@@ -14,7 +14,7 @@ public class PasswordResetToken {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "token",columnDefinition ="text", nullable = false,unique = true)
+    @Column(name = "token", columnDefinition = "text", nullable = false, unique = true)
     private String token;
 
     @Column(name = "created_timestamp", nullable = false)

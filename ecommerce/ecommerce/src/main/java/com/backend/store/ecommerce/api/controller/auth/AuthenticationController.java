@@ -9,21 +9,20 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.UnsatisfiedServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
 public class AuthenticationController {
 
-    private UserService userService;
+    private final UserService userService;
 
-    public AuthenticationController(UserService userService){
+    public AuthenticationController(UserService userService) {
         this.userService = userService;
     }
 
     @PostMapping("/register")
-    public ResponseEntity registerUser(@Valid @RequestBody RegistrationBody registrationBody){ //@Valid проверява дали правилно е въведен имейл
+    public ResponseEntity registerUser(@Valid @RequestBody RegistrationBody registrationBody) { //@Valid проверява дали правилно е въведен имейл
         try {
             userService.registerUser(registrationBody);
             return ResponseEntity.ok().build();
@@ -36,7 +35,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> loginUser(@Valid @RequestBody LoginBody loginBody){
+    public ResponseEntity<LoginResponse> loginUser(@Valid @RequestBody LoginBody loginBody) {
         String jwt = null;
         try {
             jwt = userService.logInUser(loginBody);
@@ -44,7 +43,7 @@ public class AuthenticationController {
             LoginResponse response = new LoginResponse();
             response.setSuccess(false);
             String reason = "USER_NOT_VERIFIED";
-            if(e.isNewEmailSent()){
+            if (e.isNewEmailSent()) {
                 reason += "_EMAIL_RESENT";
             }
             response.setFailureReason(reason);
@@ -53,9 +52,9 @@ public class AuthenticationController {
         } catch (EmailFailureException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-        if(jwt == null){
+        if (jwt == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        } else{
+        } else {
             LoginResponse response = new LoginResponse();
             response.setJwt(jwt);
             response.setSuccess(true);
@@ -65,11 +64,10 @@ public class AuthenticationController {
     }
 
     @PostMapping("/verify")
-    public ResponseEntity verifyEmail(@RequestParam String token){
-        if(userService.verifyUser(token)){
+    public ResponseEntity verifyEmail(@RequestParam String token) {
+        if (userService.verifyUser(token)) {
             return ResponseEntity.ok().build();
-        }
-        else{
+        } else {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
 
@@ -77,49 +75,46 @@ public class AuthenticationController {
 
     @PostMapping("/resetpassword")
     @Transactional
-    public ResponseEntity resetPassword(@Valid @RequestBody PasswordChangeBody body , @RequestParam String token){
-        try{
-            userService.changePassword(token,body);
-        }
-        catch(PasswordFailureException e){
+    public ResponseEntity resetPassword(@Valid @RequestBody PasswordChangeBody body, @RequestParam String token) {
+        try {
+            userService.changePassword(token, body);
+        } catch (PasswordFailureException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
         return ResponseEntity.ok().build();
     }
+
     @PostMapping("/resetpasswordemail")
-    public ResponseEntity resetPasswordEmail(@Valid @RequestBody EmailBody emailBody){
-        try{
+    public ResponseEntity resetPasswordEmail(@Valid @RequestBody EmailBody emailBody) {
+        try {
             userService.passwordResetEmail(emailBody);
-        }
-        catch(EmailFailureException e){
+        } catch (EmailFailureException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/me")
-    public LocalUser getLoggedInUserProfile(@AuthenticationPrincipal LocalUser user){
+    public LocalUser getLoggedInUserProfile(@AuthenticationPrincipal LocalUser user) {
         return user;
 
     }
+
     @PostMapping("/insertaddress")
-    public ResponseEntity insertAddress(@Valid @RequestBody AddressBody body)
-    {
-        try{
+    public ResponseEntity insertAddress(@Valid @RequestBody AddressBody body) {
+        try {
             userService.insertAddress(body);
-        }
-        catch(AddressFailureExeption e){
+        } catch (AddressFailureExeption e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
         return ResponseEntity.ok().build();
     }
+
     @PostMapping("/updateaddress")
-    public ResponseEntity updateAddress(@Valid @RequestBody AddressUpdateBody body)
-    {
-        try{
+    public ResponseEntity updateAddress(@Valid @RequestBody AddressUpdateBody body) {
+        try {
             userService.updateAddress(body);
-        }
-        catch(AddressFailureExeption e){
+        } catch (AddressFailureExeption e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
         return ResponseEntity.ok().build();

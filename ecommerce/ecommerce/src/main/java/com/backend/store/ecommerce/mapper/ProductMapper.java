@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ProductMapper {
     @Autowired
-private CategoryMapper categoryMapper;
+    private CategoryMapper categoryMapper;
 
     public ProductDTO toDTO(Product product) {
         ProductDTO dto = new ProductDTO();

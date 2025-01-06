@@ -3,7 +3,8 @@ package com.backend.store.ecommerce.api.controller;
 import com.backend.store.ecommerce.api.model.CartResponse;
 import com.backend.store.ecommerce.api.model.DTOs.CartItemDTO;
 import com.backend.store.ecommerce.exception.InsufficientInventoryException;
-import com.backend.store.ecommerce.model.*;
+import com.backend.store.ecommerce.model.LocalUser;
+import com.backend.store.ecommerce.model.Product;
 import com.backend.store.ecommerce.service.ProductService;
 import com.backend.store.ecommerce.service.contracts.ICartService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,7 +20,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/cart")

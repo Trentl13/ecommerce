@@ -1,10 +1,12 @@
-
 package com.backend.store.ecommerce.service;
 
-import com.backend.store.ecommerce.exception.EntityNotFoundException;
-import com.backend.store.ecommerce.model.*;
-import com.backend.store.ecommerce.model.repository.CartRepository;
 import com.backend.store.ecommerce.api.model.DTOs.CartItemDTO;
+import com.backend.store.ecommerce.exception.EntityNotFoundException;
+import com.backend.store.ecommerce.model.CartItem;
+import com.backend.store.ecommerce.model.LocalUser;
+import com.backend.store.ecommerce.model.Product;
+import com.backend.store.ecommerce.model.ShoppingCart;
+import com.backend.store.ecommerce.model.repository.CartRepository;
 import com.backend.store.ecommerce.service.contracts.ICartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
+
 @Service
 public class CartService implements ICartService {
     private final CartRepository cartRepository;

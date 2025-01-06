@@ -1,21 +1,24 @@
 package com.backend.store.ecommerce.service;
 
 
+import com.backend.store.ecommerce.api.model.DTOs.PagedResponse;
+import com.backend.store.ecommerce.api.model.DTOs.ProductDTO;
+import com.backend.store.ecommerce.api.model.DTOs.ProductSearchCriteria;
 import com.backend.store.ecommerce.api.model.Requests.ProductRequest;
+import com.backend.store.ecommerce.exception.ProductNotFoundException;
 import com.backend.store.ecommerce.model.Product;
 import com.backend.store.ecommerce.model.repository.ProductRepository;
 import com.backend.store.ecommerce.service.contracts.IProductService;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-
-import com.backend.store.ecommerce.api.model.DTOs.*;
-import com.backend.store.ecommerce.exception.*;
 import com.backend.store.ecommerce.validation.ProductValidator;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service

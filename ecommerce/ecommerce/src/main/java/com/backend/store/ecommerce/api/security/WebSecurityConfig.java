@@ -5,20 +5,18 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.intercept.AuthorizationFilter;
-import org.springframework.security.web.authentication.AuthenticationFilter;
-import org.springframework.stereotype.Component;
 
 @Configuration
 public class WebSecurityConfig {
 
-    private JWTRequestFilter jwtRequestFilter;//ВРЕМЕННО
+    private final JWTRequestFilter jwtRequestFilter;//ВРЕМЕННО
 
     public WebSecurityConfig(JWTRequestFilter jwtRequestFilter) {
         this.jwtRequestFilter = jwtRequestFilter;
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable());
         http.cors(cors -> cors.disable());
         http.addFilterBefore(jwtRequestFilter, AuthorizationFilter.class);//преди да се добави това първо извършваше тази проверка(auth -> auth.anyRequest().authenticated()) преди проверката за authentication в JWTReqeustFilter

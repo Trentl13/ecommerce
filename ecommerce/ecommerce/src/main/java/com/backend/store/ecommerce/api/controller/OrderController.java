@@ -20,16 +20,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -72,21 +69,17 @@ public class OrderController {
             @AuthenticationPrincipal LocalUser user,
             @RequestParam @Positive Long addressId) {
 
-        // Verify address belongs to user
         if (!addressService.validateAddressBelongsToUser(addressId, user)) {
             throw new InvalidAddressException("Address does not belong to user");
         }
 
-        // Verify cart is not empty
         List<CartItemDTO> cartItems = cartService.getCartItems(user);
         if (cartItems.isEmpty()) {
             throw new EmptyCartException("Cannot create order with empty cart");
         }
 
-        // Create order
         WebOrder order = orderService.createOrder(user, addressId);
 
-        // Clear cart after successful order creation
         cartService.clearCart(user);
 
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -102,7 +95,6 @@ public class OrderController {
             @AuthenticationPrincipal LocalUser user) {
         WebOrder order = orderService.getOrderById(id);
 
-        // Verify order belongs to user or user is admin
         if (!order.getUser().getId().equals(user.getId())) {
             throw new AccessDeniedException("Not authorized to view this order");
         }
@@ -121,7 +113,6 @@ public class OrderController {
 
         WebOrder order = orderService.getOrderById(id);
 
-        // Validate status transition
         validateStatusTransition(order.getStatus(), status);
 
         orderService.updateOrderStatus(id, status, comment);
@@ -138,12 +129,10 @@ public class OrderController {
 
         WebOrder order = orderService.getOrderById(id);
 
-        // Verify order belongs to user or user is admin
         if (!order.getUser().getId().equals(user.getId())) {
             throw new AccessDeniedException("Not authorized to cancel this order");
         }
 
-        // Verify order can be cancelled
         if (!canCancel(order.getStatus())) {
             throw new InvalidOrderStateException("Order cannot be cancelled in current state");
         }
@@ -161,7 +150,6 @@ public class OrderController {
 
         WebOrder order = orderService.getOrderById(id);
 
-        // Verify order belongs to user or user is admin
         if (!order.getUser().getId().equals(user.getId())) {
             throw new AccessDeniedException("Not authorized to view this order's history");
         }
